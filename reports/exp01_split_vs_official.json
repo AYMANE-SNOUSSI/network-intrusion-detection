@@ -1,0 +1,54 @@
+{
+  "A_random_split": {
+    "n": 25195,
+    "accuracy": 0.9986108354832308,
+    "attack_precision": 0.9996580904350799,
+    "attack_recall": 0.997356302234351,
+    "false_positive_rate": 0.00029697824634345533,
+    "recall_per_category": {
+      "DoS": {
+        "recall": 0.9998911268372346,
+        "n": 9185
+      },
+      "Probe": {
+        "recall": 0.9939965694682675,
+        "n": 2332
+      },
+      "R2L": {
+        "recall": 0.9447236180904522,
+        "n": 199
+      },
+      "U2R": {
+        "recall": 0.5,
+        "n": 10
+      }
+    }
+  },
+  "B_official_test": {
+    "n": 22544,
+    "accuracy": 0.778388928317956,
+    "attack_precision": 0.9690005984440455,
+    "attack_recall": 0.6308735291825762,
+    "false_positive_rate": 0.026670785706930284,
+    "recall_per_category": {
+      "DoS": {
+        "recall": 0.828238133547868,
+        "n": 7458
+      },
+      "Probe": {
+        "recall": 0.7199504337050805,
+        "n": 2421
+      },
+      "R2L": {
+        "recall": 0.05784551437478351,
+        "n": 2887
+      },
+      "U2R": {
+        "recall": 0.13432835820895522,
+        "n": 67
+      }
+    },
+    "recall_known_attack_types": 0.7702301001871629,
+    "recall_novel_attack_types": 0.29333333333333333
+  }
+}

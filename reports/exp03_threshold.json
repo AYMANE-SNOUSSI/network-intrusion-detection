@@ -1,0 +1,106 @@
+{
+  "model": "hist_gradient_boosting",
+  "seed": 0,
+  "roc_auc": {
+    "validation": 0.9999870866635379,
+    "test": 0.956449867628127
+  },
+  "operating_points": [
+    {
+      "name": "default 0.5",
+      "threshold": 0.5,
+      "validation": {
+        "recall": 0.9983796691113764,
+        "fpr": 0.0014848912317172768,
+        "per_day": {
+          "attacks_caught": 49.9,
+          "attacks_missed": 0.1,
+          "false_alerts": 14.8,
+          "share_of_alerts_that_are_real": 0.772
+        }
+      },
+      "test": {
+        "recall": 0.6452894880386504,
+        "fpr": 0.027391617753063535,
+        "per_day": {
+          "attacks_caught": 32.3,
+          "attacks_missed": 17.7,
+          "false_alerts": 272.5,
+          "share_of_alerts_that_are_real": 0.106
+        }
+      }
+    },
+    {
+      "name": "FPR 0.001 on validation",
+      "threshold": 0.7543297059357713,
+      "validation": {
+        "recall": 0.997356302234351,
+        "fpr": 0.0009651793006162299,
+        "per_day": {
+          "attacks_caught": 49.9,
+          "attacks_missed": 0.1,
+          "false_alerts": 9.6,
+          "share_of_alerts_that_are_real": 0.839
+        }
+      },
+      "test": {
+        "recall": 0.625808462557469,
+        "fpr": 0.026155905673977964,
+        "per_day": {
+          "attacks_caught": 31.3,
+          "attacks_missed": 18.7,
+          "false_alerts": 260.3,
+          "share_of_alerts_that_are_real": 0.107
+        }
+      }
+    },
+    {
+      "name": "FPR 0.01 on validation",
+      "threshold": 0.020597261619594184,
+      "validation": {
+        "recall": 0.9997441582807437,
+        "fpr": 0.009948771252505755,
+        "per_day": {
+          "attacks_caught": 50.0,
+          "attacks_missed": 0.0,
+          "false_alerts": 99.0,
+          "share_of_alerts_that_are_real": 0.336
+        }
+      },
+      "test": {
+        "recall": 0.7929556611860048,
+        "fpr": 0.03408505818144372,
+        "per_day": {
+          "attacks_caught": 39.6,
+          "attacks_missed": 10.4,
+          "false_alerts": 339.1,
+          "share_of_alerts_that_are_real": 0.105
+        }
+      }
+    },
+    {
+      "name": "FPR 0.05 on validation",
+      "threshold": 0.0022758334302039845,
+      "validation": {
+        "recall": 1.0,
+        "fpr": 0.04974385626252877,
+        "per_day": {
+          "attacks_caught": 50.0,
+          "attacks_missed": 0.0,
+          "false_alerts": 495.0,
+          "share_of_alerts_that_are_real": 0.092
+        }
+      },
+      "test": {
+        "recall": 0.8653471518740746,
+        "fpr": 0.056533827618164965,
+        "per_day": {
+          "attacks_caught": 43.3,
+          "attacks_missed": 6.7,
+          "false_alerts": 562.5,
+          "share_of_alerts_that_are_real": 0.071
+        }
+      }
+    }
+  ]
+}

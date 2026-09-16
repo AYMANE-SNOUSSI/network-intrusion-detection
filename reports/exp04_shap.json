@@ -1,0 +1,208 @@
+{
+  "model": "hist_gradient_boosting",
+  "seed": 0,
+  "threshold": 0.5,
+  "global_importance_top15": {
+    "src_bytes": 3.4259,
+    "dst_host_srv_count": 1.251,
+    "dst_bytes": 1.0138,
+    "service": 0.9941,
+    "count": 0.9437,
+    "dst_host_srv_serror_rate": 0.5455,
+    "dst_host_same_srv_rate": 0.4025,
+    "logged_in": 0.3227,
+    "dst_host_same_src_port_rate": 0.3102,
+    "dst_host_rerror_rate": 0.2962,
+    "hot": 0.2706,
+    "same_srv_rate": 0.2594,
+    "dst_host_diff_srv_rate": 0.2139,
+    "protocol_type": 0.2064,
+    "dst_host_serror_rate": 0.1723
+  },
+  "example_caught_attack": {
+    "label": "back",
+    "attack_probability": 0.9999818726924391,
+    "top_factors": [
+      {
+        "feature": "src_bytes",
+        "value": 32120,
+        "contribution": 8.079,
+        "direction": "towards attack"
+      },
+      {
+        "feature": "hot",
+        "value": 1,
+        "contribution": 4.485,
+        "direction": "towards attack"
+      },
+      {
+        "feature": "dst_bytes",
+        "value": 4380,
+        "contribution": -0.841,
+        "direction": "towards normal"
+      },
+      {
+        "feature": "service",
+        "value": "http",
+        "contribution": -0.749,
+        "direction": "towards normal"
+      },
+      {
+        "feature": "dst_host_rerror_rate",
+        "value": 0.05,
+        "contribution": 0.7,
+        "direction": "towards attack"
+      }
+    ]
+  },
+  "example_missed_attack": {
+    "label": "guess_passwd",
+    "attack_probability": 0.00011788072084067821,
+    "top_factors": [
+      {
+        "feature": "src_bytes",
+        "value": 129,
+        "contribution": -2.531,
+        "direction": "towards normal"
+      },
+      {
+        "feature": "dst_host_srv_count",
+        "value": 255,
+        "contribution": -2.073,
+        "direction": "towards normal"
+      },
+      {
+        "feature": "dst_bytes",
+        "value": 174,
+        "contribution": -1.019,
+        "direction": "towards normal"
+      },
+      {
+        "feature": "count",
+        "value": 1,
+        "contribution": -0.867,
+        "direction": "towards normal"
+      },
+      {
+        "feature": "dst_host_srv_serror_rate",
+        "value": 0.01,
+        "contribution": -0.448,
+        "direction": "towards normal"
+      }
+    ]
+  },
+  "r2l_per_attack_type": {
+    "guess_passwd": {
+      "n_test": 1231,
+      "detection_rate": 0.0,
+      "n_train": 53
+    },
+    "warezmaster": {
+      "n_test": 944,
+      "detection_rate": 0.167,
+      "n_train": 20
+    },
+    "snmpguess": {
+      "n_test": 331,
+      "detection_rate": 0.0,
+      "n_train": 0
+    },
+    "snmpgetattack": {
+      "n_test": 178,
+      "detection_rate": 0.0,
+      "n_train": 0
+    },
+    "httptunnel": {
+      "n_test": 133,
+      "detection_rate": 0.023,
+      "n_train": 0
+    },
+    "multihop": {
+      "n_test": 18,
+      "detection_rate": 0.222,
+      "n_train": 7
+    },
+    "named": {
+      "n_test": 17,
+      "detection_rate": 0.118,
+      "n_train": 0
+    },
+    "sendmail": {
+      "n_test": 14,
+      "detection_rate": 0.0,
+      "n_train": 0
+    },
+    "xlock": {
+      "n_test": 9,
+      "detection_rate": 0.0,
+      "n_train": 0
+    },
+    "xsnoop": {
+      "n_test": 4,
+      "detection_rate": 0.25,
+      "n_train": 0
+    },
+    "ftp_write": {
+      "n_test": 3,
+      "detection_rate": 0.0,
+      "n_train": 8
+    },
+    "phf": {
+      "n_test": 2,
+      "detection_rate": 0.5,
+      "n_train": 4
+    },
+    "worm": {
+      "n_test": 2,
+      "detection_rate": 0.0,
+      "n_train": 0
+    },
+    "imap": {
+      "n_test": 1,
+      "detection_rate": 0.0,
+      "n_train": 11
+    }
+  },
+  "guess_passwd_train_vs_test": {
+    "train": {
+      "n": 53,
+      "service": {
+        "telnet": 1.0
+      },
+      "flag": {
+        "RSTO": 0.849,
+        "RSTR": 0.075,
+        "SF": 0.038
+      },
+      "num_failed_logins_mean": 1.057,
+      "hot_mean": 1.057
+    },
+    "test": {
+      "n": 1231,
+      "service": {
+        "pop_3": 0.609,
+        "telnet": 0.313,
+        "ftp": 0.078
+      },
+      "flag": {
+        "SF": 0.975,
+        "RSTO": 0.02,
+        "S3": 0.003
+      },
+      "num_failed_logins_mean": 0.379,
+      "hot_mean": 0.0
+    }
+  },
+  "missed_guess_passwd_mean_contribution_top10": {
+    "src_bytes": -1.708,
+    "dst_bytes": -1.199,
+    "count": -1.141,
+    "logged_in": -0.643,
+    "dst_host_srv_count": 0.433,
+    "dst_host_srv_serror_rate": -0.416,
+    "dst_host_same_srv_rate": -0.375,
+    "dst_host_same_src_port_rate": -0.323,
+    "same_srv_rate": -0.22,
+    "hot": -0.176
+  }
+}
