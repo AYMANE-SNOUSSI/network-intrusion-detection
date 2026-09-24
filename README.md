@@ -1,9 +1,12 @@
 # Network Intrusion Detection
 
+[![ci](https://github.com/AYMANE-SNOUSSI/network-intrusion-detection/actions/workflows/ci.yml/badge.svg)](https://github.com/AYMANE-SNOUSSI/network-intrusion-detection/actions/workflows/ci.yml)
+
 **Why 99 % accuracy in a notebook says almost nothing about a detector in deployment.**
 
 A network intrusion classifier trained on NSL-KDD, evaluated the way it would actually be
-used, and explained with SHAP. The model is not the point. The measurements are.
+used, explained with SHAP, and served as a validated, tested, containerised API. The model is
+not the point. The measurements are.
 
 | Evaluation | Accuracy | Attacks caught | Never-seen attack types caught |
 |---|---|---|---|
@@ -180,6 +183,77 @@ The same mechanism, at a larger scale, is why the internship version failed on r
 
 ---
 
+## 5. Serving the model
+
+`src/train.py`, `src/api.py`, `src/call_api.py`, `tests/test_api.py`, `Dockerfile`.
+
+Training and serving are separate. `train.py` fits the model once and writes
+`models/model.joblib` next to `models/model_card.json`; the service loads both at startup and
+never fits anything. The SHAP explainer is built once at startup rather than per request.
+
+| Route | Method | Answers |
+|---|---|---|
+| `/health` | GET | is the service up, and is a model loaded |
+| `/model` | GET | the model card: training data, metrics, and the stated limitation |
+| `/predict` | POST | verdict, probability, threshold |
+| `/explain` | POST | the same, plus the fields that weighed most |
+
+The model card is served next to the predictions on purpose. A caller can read what the model
+was trained on, and this line, without asking anyone:
+
+> `"known_limitation": "trained on public 1998-era traffic; the recall above is what this model achieves on attack types it has never seen"`
+
+### Validation is the point
+
+The internship version replaced missing inputs with zeros and always returned a prediction.
+Here the 41 fields are declared with their types and bounds, and a request that does not match
+is refused with HTTP 422 naming the offending field. A rate outside [0, 1], a negative byte
+count, a field the model was never trained on, or a missing field all produce an error instead
+of a confident answer. An empty body reports all 41 problems at once.
+
+A startup check compares the fields the API accepts against the columns the model was trained
+on and refuses to start if they differ, so the service cannot silently predict on shifted
+columns.
+
+### Tests
+
+`tests/test_api.py` — 20 tests that run **without starting a server**: the predictions on a
+known attack and a known normal connection, the six ways a malformed request must be refused,
+the consistency between `/predict` and `/explain`, the ordering of an explanation, and the
+contract between the API's fields and the model's.
+
+```bash
+python -m pytest -v        # 20 passed
+```
+
+### Container
+
+```bash
+docker build -t intrusion-api .
+docker run --rm -p 8000:8000 intrusion-api
+python src/call_api.py --from-test 0        # from another terminal
+```
+
+The image pins every dependency to the versions that produced `model.joblib`, copies only what
+the service needs at runtime, runs as a non-root user, and declares a health check that calls
+`/health` from inside the container. `src/call_api.py` needs nothing beyond the standard
+library: it sends one row of the official test file and prints the verdict against its true
+label.
+
+GitHub Actions runs the 20 tests and rebuilds the image from a clean clone on every push, then
+starts a container and calls it. The badge at the top of this page reports the last run.
+
+### What this is, and what it is not
+
+The service demonstrates that this model can be shipped, validated and tested. It is not a
+product: the model is trained on simulated 1998 traffic and misses a third of attacks, so no
+deployment of it would protect a real network. What would transfer to a real one is the
+service around the model — the strict input contract, the model card served with the
+predictions, the explanation attached to every alert, and the tests that fail when any of
+those break.
+
+---
+
 ## Limitations
 
 - **NSL-KDD dates from simulated 1998 traffic.** The conclusions are about evaluation
@@ -187,7 +261,7 @@ The same mechanism, at a larger scale, is why the internship version failed on r
 - **3 seeds** give a rough spread estimate: enough to reject small differences, not to rank
   close models precisely.
 - SHAP explains what the model uses, not what causes an attack.
-- One model family is explained (HistGradientBoosting, seed 0, threshold 0.5).
+- One model family is explained and served (HistGradientBoosting, seed 0, threshold 0.5).
 
 ## What would make it work
 
@@ -223,26 +297,49 @@ Results are written to `reports/`. RandomForest results are identical across mac
 boosting and logistic regression figures can differ in the third decimal because of
 floating-point differences in parallel computation.
 
+The served model is already in the repository. To rebuild it and run the service without
+Docker:
+
+```bash
+cd src
+python train.py                        # rewrites models/model.joblib and the model card
+python -m uvicorn api:app --reload     # http://127.0.0.1:8000/docs
+```
+
 ## Structure
 
 ```
 network-intrusion-detection/
+├── .github/workflows/ci.yml           # tests + image build on every push
 ├── src/
 │   ├── data.py                        # download, integrity check, attack taxonomy
 │   ├── exp01_split_vs_official.py
 │   ├── exp02_model_comparison.py
 │   ├── exp03_threshold.py
 │   ├── exp04_shap.py
-│   └── explain.py                     # reusable per-prediction explanations
+│   ├── explain.py                     # reusable per-prediction explanations
+│   ├── train.py                       # fits the served model, writes the model card
+│   ├── api.py                         # the service
+│   └── call_api.py                    # client, standard library only
+├── tests/
+│   └── test_api.py                    # 20 tests, no server needed
+├── models/                            # model.joblib + model_card.json
 ├── reports/                           # JSON results and figures
-├── requirements.txt
+├── Dockerfile
+├── .dockerignore
+├── pytest.ini
+├── requirements.txt                   # experiments and tests
+├── requirements-api.txt               # what the service needs, pinned
 └── README.md
 ```
 
 ## Next
 
-A FastAPI service returning a prediction and its explanation, with strict input validation
-(a missing field is an error, never a zero), packaged with Docker and tested in CI.
+- Re-estimate the alert threshold on live traffic instead of a validation split, and measure
+  how far it drifts.
+- Anomaly detection trained on normal traffic only, to compare on never-seen attack types.
+- Explain why the 10-feature selection catches four times more R2L intrusions than the full
+  feature set.
 
 ---
 
