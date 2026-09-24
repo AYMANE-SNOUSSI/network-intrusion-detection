@@ -1,6 +1,11 @@
 data/
 .venv/
 __pycache__/
+*.pyc
+.pytest_cache/
 .ipynb_checkpoints/
+
+# Les modeles ne vont pas dans git, sauf celui que l'API et Docker utilisent.
 *.pkl
 *.joblib
+!models/model.joblib

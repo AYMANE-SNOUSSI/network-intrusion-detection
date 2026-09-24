@@ -1,0 +1,8 @@
+# Ce dont l'API a besoin pour tourner, et rien d'autre
+fastapi==0.141.1
+uvicorn==0.53.0
+pandas==3.0.5
+numpy==2.5.3
+scikit-learn==1.9.1
+shap==0.52.0
+joblib==1.6.0

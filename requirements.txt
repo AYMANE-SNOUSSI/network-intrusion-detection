@@ -1,5 +1,10 @@
-pandas>=2.2
-scikit-learn>=1.5
-numpy>=1.26
-matplotlib>=3.8
-shap>=0.46
+pandas
+scikit-learn
+numpy
+matplotlib
+shap
+joblib
+fastapi
+uvicorn
+pytest
+httpx
